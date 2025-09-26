@@ -1,0 +1,19 @@
+services:
+  laravel-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: laravel-sail-dev
+    volumes:
+      # プロジェクト作成用ディレクトリをマウント
+      - ./projects:/root/src/projects
+      # Composerのキャッシュを永続化
+      - composer-cache:/root/.composer/cache
+    working_dir: /root/src
+    stdin_open: true
+    tty: true
+    command: bash
+
+volumes:
+  # Composerキャッシュ用のボリューム
+  composer-cache:
