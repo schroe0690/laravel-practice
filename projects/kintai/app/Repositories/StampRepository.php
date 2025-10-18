@@ -54,6 +54,7 @@ class StampRepository
     {
         return Stamp::create([
             'stamp_type' => $stampType,
+            'stamp_time' => now(),
         ]);
     }
 
@@ -62,9 +63,9 @@ class StampRepository
      */
     public function getStampsByMonth(int $year, int $month): Collection
     {
-        return Stamp::whereYear('created_at', $year)
-            ->whereMonth('created_at', $month)
-            ->orderBy('created_at', 'asc')
+        return Stamp::whereYear('stamp_time', $year)
+            ->whereMonth('stamp_time', $month)
+            ->orderBy('stamp_time', 'asc')
             ->get();
     }
 }

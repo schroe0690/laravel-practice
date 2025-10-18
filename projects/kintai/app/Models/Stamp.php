@@ -20,8 +20,7 @@ class Stamp extends Authenticatable
      */
     protected $fillable = [
         'stamp_type',
-        'created_at',
-        'updated_at',
+        'stamp_time',
     ];
 
         /**
@@ -29,7 +28,10 @@ class Stamp extends Authenticatable
      *
      * @var list<string>
      */
-    protected $hidden = [];
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
 
     /**
      * それぞれのカラムのキャスト
@@ -40,6 +42,7 @@ class Stamp extends Authenticatable
     {
         return [
             'stamp_type' => StampType::class,
+            'stamp_time' => 'datetime',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];

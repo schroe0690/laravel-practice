@@ -19,12 +19,13 @@ return new class extends Migration
                 'break_out',
                 'clock_out',
             ])->default('clock_in');
+            $table->datetime('stamp_time');
             $table->timestamps();
         });
     }
 
     /**
-     * Reverse the migrations.
+     * Reverse the migrations.w
      */
     public function down(): void
     {

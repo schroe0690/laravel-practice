@@ -44,14 +44,14 @@
                         <tbody class="bg-white divide-y divide-gray-200">
                             @php
                                 $groupedStamps = $stampHistoryOneMonth->groupBy(function($stamp) {
-                                    return $stamp->created_at->format('Y-m-d');
+                                    return $stamp->stamp_time->format('Y-m-d');
                                 });
-                                
+
                                 // 現在の月の最初の日と最後の日を取得
                                 $currentMonth = now()->format('Y-m');
                                 $firstDay = \Carbon\Carbon::parse($currentMonth . '-01');
                                 $lastDay = $firstDay->copy()->endOfMonth();
-                                
+
                                 // 一ヶ月分の日付を生成
                                 $allDates = [];
                                 $currentDate = $firstDay->copy();
@@ -60,7 +60,7 @@
                                     $currentDate->addDay();
                                 }
                             @endphp
-                            
+
                             @foreach($allDates as $date)
                                 @php
                                     $stamps = $groupedStamps->get($date, collect());
@@ -68,18 +68,18 @@
                                     $clockOut = $stamps->where('stamp_type', \App\Enums\StampType::CLOCK_OUT)->first();
                                     $breakIn = $stamps->where('stamp_type', \App\Enums\StampType::BREAK_IN)->first();
                                     $breakOut = $stamps->where('stamp_type', \App\Enums\StampType::BREAK_OUT)->first();
-                                    
+
                                     // 勤務時間の計算
                                     $workingTime = null;
                                     if ($clockIn && $clockOut) {
                                         // 出勤時間が退勤時間より前の場合のみ計算
-                                        if ($clockIn->created_at->lt($clockOut->created_at)) {
-                                            $totalTime = $clockIn->created_at->diffInMinutes($clockOut->created_at);
+                                        if ($clockIn->stamp_time->lt($clockOut->stamp_time)) {
+                                            $totalTime = $clockIn->stamp_time->diffInMinutes($clockOut->stamp_time);
                                             $breakTime = 0;
                                             if ($breakIn && $breakOut) {
                                                 // 休憩時間が正しい順序（開始 < 終了）の場合のみ計算
-                                                if ($breakIn->created_at->lt($breakOut->created_at)) {
-                                                    $breakTime = $breakIn->created_at->diffInMinutes($breakOut->created_at);
+                                                if ($breakIn->stamp_time->lt($breakOut->stamp_time)) {
+                                                    $breakTime = $breakIn->stamp_time->diffInMinutes($breakOut->stamp_time);
                                                 }
                                             }
                                             $workingTime = $totalTime - $breakTime;
@@ -98,16 +98,16 @@
                                         {{ \Carbon\Carbon::parse($date)->format('m/d (D)') }}
                                     </td>
                                     <td class="time-cell">
-                                        {{ $clockIn ? $clockIn->created_at->format('H:i') : '-' }}
+                                        {{ $clockIn ? $clockIn->stamp_time->format('H:i') : '-' }}
                                     </td>
                                     <td class="time-cell">
-                                        {{ $breakIn ? $breakIn->created_at->format('H:i') : '-' }}
+                                        {{ $breakIn ? $breakIn->stamp_time->format('H:i') : '-' }}
                                     </td>
                                     <td class="time-cell">
-                                        {{ $breakOut ? $breakOut->created_at->format('H:i') : '-' }}
+                                        {{ $breakOut ? $breakOut->stamp_time->format('H:i') : '-' }}
                                     </td>
                                     <td class="time-cell">
-                                        {{ $clockOut ? $clockOut->created_at->format('H:i') : '-' }}
+                                        {{ $clockOut ? $clockOut->stamp_time->format('H:i') : '-' }}
                                     </td>
                                     <td class="working-time-cell">
                                         @if($workingTime !== null)

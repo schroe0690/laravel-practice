@@ -32,13 +32,13 @@ class StampController extends Controller
         // 最後の打刻を取得
         $lastStamp = $this->stampService->getLastStamp();
 
-        // 特定のカラムを取得
+        // 指定のカラムを取得
         $stampType = $lastStamp?->stamp_type;        // stamp_typeカラム
-        $createdAt = $lastStamp?->created_at;        // created_atカラム
+        $stampTime = $lastStamp?->stamp_time;        // stamp_timeカラム
 
         return view('stamp', [
             'last_stamp_type' => $stampType,
-            'last_stamp_time' => $createdAt,
+            'last_stamp_time' => $stampTime,
         ]);
     }
 
